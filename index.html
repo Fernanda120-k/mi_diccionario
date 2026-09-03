@@ -1,0 +1,327 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Diccionarios Compartidos en la Nube</title>
+    <style>
+        :root {
+            --primary: #4f46e5;
+            --primary-hover: #4338ca;
+            --bg-color: #f8fafc;
+            --card-bg: #ffffff;
+            --text-main: #1e293b;
+            --text-muted: #64748b;
+            --border: #e2e8f0;
+            --danger: #ef4444;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 750px;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 25px;
+        }
+
+        header h1 {
+            color: var(--primary);
+            margin-bottom: 5px;
+        }
+
+        .card {
+            background: var(--card-bg);
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1);
+            margin-bottom: 20px;
+        }
+
+        .flex-row {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 10px;
+        }
+
+        input[type="text"], textarea {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            font-size: 1rem;
+            outline: none;
+        }
+
+        input:focus, textarea:focus {
+            border-color: var(--primary);
+        }
+
+        textarea {
+            resize: vertical;
+            height: 70px;
+        }
+
+        button {
+            background-color: var(--primary);
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 8px;
+            font-size: 0.95rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+
+        button:hover {
+            background-color: var(--primary-hover);
+        }
+
+        .secondary-btn {
+            background-color: #64748b;
+        }
+        .secondary-btn:hover {
+            background-color: #475569;
+        }
+
+        .badge {
+            background: #e0e7ff;
+            color: var(--primary);
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: bold;
+        }
+
+        .word-item {
+            background: var(--card-bg);
+            padding: 15px 20px;
+            border-radius: 10px;
+            border: 1px solid var(--border);
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 12px;
+            box-shadow: 0 1px 3px 0 rgb(0 0 0 / 0.05);
+        }
+
+        .word-info h3 {
+            margin: 0 0 5px 0;
+            color: var(--primary);
+            text-transform: capitalize;
+        }
+
+        .word-info p {
+            margin: 0;
+            color: var(--text-main);
+            font-size: 0.95rem;
+        }
+
+        .delete-btn {
+            background: none;
+            border: none;
+            color: var(--danger);
+            cursor: pointer;
+            font-weight: 600;
+        }
+
+        .hidden { display: none !important; }
+        
+        .user-banner {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: #eef2ff;
+            padding: 10px 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <header>
+            <h1>🌐 Diccionarios en Comunidad</h1>
+            <p>Crea tu propio repertorio de palabras o explora el de otros</p>
+        </header>
+
+        <div id="authSection" class="card">
+            <h3>Paso 1: Identifícate</h3>
+            <p style="font-size: 0.9rem; color: var(--text-muted);">Ingresa un nombre de usuario único para acceder a tu diccionario o visita el de alguien más.</p>
+            <div class="flex-row">
+                <input type="text" id="usernameInput" placeholder="Ej. Sofia2026" autocomplete="off">
+                <button id="loginBtn">Entrar a mi Diccionario</button>
+            </div>
+            <div style="margin-top: 15px;">
+                <input type="text" id="searchUserView" placeholder="🔍 O busca el usuario de otra persona para ver su diccionario...">
+                <button class="secondary-btn" id="viewOtherBtn" style="margin-top: 8px; width: 100%;">Visitar Diccionario Ajeno (Sólo Lectura)</button>
+            </div>
+        </div>
+
+        <div id="dictionarySection" class="hidden">
+            <div class="user-banner">
+                <div>Viendo el diccionario de: <strong id="currentViewingUser" style="color: var(--primary);"></strong></div>
+                <button class="secondary-btn" id="logoutBtn" style="padding: 5px 10px; font-size: 0.8rem;">Cambiar / Salir</button>
+            </div>
+
+            <div class="card" id="formCard">
+                <h3>Agregar nueva palabra</h3>
+                <form id="wordForm">
+                    <div style="margin-bottom: 10px;">
+                        <input type="text" id="wordInput" placeholder="Palabra (Ej. Efímero)" required autocomplete="off">
+                    </div>
+                    <div style="margin-bottom: 10px;">
+                        <textarea id="definitionInput" placeholder="Definición..." required></textarea>
+                    </div>
+                    <button type="submit" style="width: 100%;">Guardar Palabra en mi Diccionario</button>
+                </form>
+            </div>
+
+            <div style="margin-bottom: 15px;">
+                <input type="text" id="searchWordInput" placeholder="Filtrar palabras en este diccionario...">
+            </div>
+
+            <div id="wordList"></div>
+        </div>
+    </div>
+
+    <script>
+        // Lógica de interfaz básica (Simulación de navegación de usuarios)
+        const authSection = document.getElementById('authSection');
+        const dictionarySection = document.getElementById('dictionarySection');
+        const usernameInput = document.getElementById('usernameInput');
+        const loginBtn = document.getElementById('loginBtn');
+        const logoutBtn = document.getElementById('logoutBtn');
+        const currentViewingUser = document.getElementById('currentViewingUser');
+        const formCard = document.getElementById('formCard');
+        const searchUserView = document.getElementById('searchUserView');
+        const viewOtherBtn = document.getElementById('viewOtherBtn');
+        
+        const wordForm = document.getElementById('wordForm');
+        const wordInput = document.getElementById('wordInput');
+        const definitionInput = document.getElementById('definitionInput');
+        const wordList = document.getElementById('wordList');
+
+        let currentUser = '';
+        let viewingUser = '';
+        let isOwner = false;
+
+        // Simulación temporal de base de datos local compartida en el navegador (Para demostración)
+        // En una implementación real con internet, aquí conectaríamos Firebase Cloud Firestore.
+        function getDatabase() {
+            return JSON.parse(localStorage.getItem('cloudDictionaries')) || {};
+        }
+
+        function saveDatabase(db) {
+            localStorage.setItem('cloudDictionaries', JSON.stringify(db));
+        }
+
+        loginBtn.addEventListener('click', () => {
+            const user = usernameInput.value.trim().toLowerCase();
+            if (!user) return alert('Por favor escribe un nombre de usuario');
+            
+            currentUser = user;
+            viewingUser = user;
+            isOwner = true;
+            loadDictionaryView();
+        });
+
+        viewOtherBtn.addEventListener('click', () => {
+            const user = searchUserView.value.trim().toLowerCase();
+            if (!user) return alert('Escribe el usuario que deseas visitar');
+            
+            viewingUser = user;
+            isOwner = (currentUser === viewingUser);
+            loadDictionaryView();
+        });
+
+        logoutBtn.addEventListener('click', () => {
+            authSection.classList.remove('hidden');
+            dictionarySection.classList.add('hidden');
+            usernameInput.value = '';
+        });
+
+        function loadDictionaryView() {
+            authSection.classList.add('hidden');
+            dictionarySection.classList.remove('hidden');
+            currentViewingUser.textContent = viewingUser + (isOwner ? ' (Tú)' : ' (Modo Consulta)');
+
+            if (isOwner) {
+                formCard.classList.remove('hidden');
+            } else {
+                formCard.classList.add('hidden'); // Oculta el formulario si estás viendo el de alguien más
+            }
+
+            renderWords();
+        }
+
+        wordForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            if (!isOwner) return;
+
+            const word = wordInput.value.trim();
+            const definition = definitionInput.value.trim();
+
+            let db = getDatabase();
+            if (!db[currentUser]) {
+                db[currentUser] = [];
+            }
+
+            db[currentUser].push({ word, definition });
+            // Ordenar alfabéticamente
+            db[currentUser].sort((a, b) => a.word.localeCompare(b.word, 'es', { sensitivity: 'base' }));
+            
+            saveDatabase(db);
+
+            wordInput.value = '';
+            definitionInput.value = '';
+            renderWords();
+        });
+
+        function renderWords() {
+            wordList.innerHTML = '';
+            let db = getDatabase();
+            let words = db[viewingUser] || [];
+
+            if (words.length === 0) {
+                wordList.innerHTML = <div style="text-align: center; color: var(--text-muted); padding: 20px;">${viewingUser} aún no tiene palabras registradas.</div>;
+                return;
+            }
+
+            words.forEach((item, index) => {
+                const div = document.createElement('div');
+                div.className = 'word-item';
+                div.innerHTML = `
+                    <div class="word-info">
+                        <h3>${item.word}</h3>
+                        <p>${item.definition}</p>
+                    </div>
+                    ${isOwner ? <button class="delete-btn" onclick="deleteWord(${index})">Eliminar</button> : ''}
+                `;
+                wordList.appendChild(div);
+            });
+        }
+
+        window.deleteWord = function(index) {
+            if (!isOwner) return;
+            let db = getDatabase();
+            db[currentUser].splice(index, 1);
+            saveDatabase(db);
+            renderWords();
+        }
+    </script>
+</body>
+</html>
